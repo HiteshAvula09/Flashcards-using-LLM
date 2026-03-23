@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────
+#  .gitignore
+# ─────────────────────────────────────────────────────────────
+
+# Environment — NEVER commit real credentials
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Data — PDFs and datasets are large; store separately
+data/raw/
+data/squad/
+data/chroma_db/
+
+# Eval results — keep structure, ignore output files
+eval/results/*.json
+eval/results/*.csv
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker volumes
+postgres_data/
