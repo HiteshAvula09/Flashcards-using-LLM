@@ -9,7 +9,7 @@ Upload any PDF — textbook, lecture notes, research paper — and get instant f
 
 - **Upload any PDF** — no subject restrictions, works with any content
 - **RAG pipeline** — chunks and embeds your PDF into ChromaDB, retrieves relevant context before every generation
-- **Groq LLM** — fast, free `llama3-70b-8192` for flashcard and quiz generation
+- **Groq LLM** — fast, free `llama-3.3-70b-versatile` for flashcard and quiz generation
 - **Multi-format quizzes** — MCQ, true/false, and short answer
 - **SM-2 spaced repetition** — cards scheduled based on your recall ratings
 - **SQuAD v2 evaluation** — Exact Match and F1 scoring to benchmark generation quality
@@ -22,7 +22,7 @@ Upload any PDF — textbook, lecture notes, research paper — and get instant f
 
 | Layer | Tool |
 |---|---|
-| LLM | Groq API (`llama3-70b-8192`) — free tier |
+| LLM | Groq API (`llama-3.3-70b-versatile`) — free tier |
 | Embeddings | `sentence-transformers/all-MiniLM-L6-v2` — local |
 | Vector store | ChromaDB — local, per-document collections |
 | Database | PostgreSQL (Docker) |
@@ -84,8 +84,8 @@ flashcard-ai/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/flashcard-ai.git
-cd flashcard-ai
+git clone https://github.com/HiteshAvula09/Flashcards-using-LLM.git
+cd Flashcards-using-LLM
 ```
 
 ### 2. Create and activate a virtual environment
@@ -178,8 +178,8 @@ Then go straight to Generate in the UI — skip the Upload page entirely.
 ## Run the SQuAD evaluation
 
 ```bash
-# Place squad_v2.json in data/squad/
-python -m eval.squad_eval --squad data/squad/squad_v2.json --n 100
+# Place dev-v1.1.json in data/squad/
+python -m eval.squad_eval --squad data/squad/dev-v1.1.json --n 100
 ```
 
 Results saved to `eval/results/eval_report.json`:
@@ -189,7 +189,7 @@ Results saved to `eval/results/eval_report.json`:
   "exact_match": 0.412,
   "f1": 0.587,
   "num_samples": 100,
-  "model": "llama3-70b-8192"
+  "model": "llama-3.3-70b-versatile"
 }
 ```
 
@@ -224,7 +224,7 @@ ChromaDB stores vectors in a collection named by document_id
 User enters a topic → embedded → top-6 chunks retrieved
         │
         ▼
-Groq llama3-70b receives context + structured prompt
+Groq llama-3.3-70b receives context + structured prompt
         │
         ▼
 Pydantic validates JSON output → flashcards + quiz questions
@@ -240,7 +240,7 @@ PostgreSQL stores cards, quiz sessions, SM-2 review state
 | Variable | Description | Default |
 |---|---|---|
 | `GROQ_API_KEY` | Your Groq API key | required |
-| `GROQ_MODEL` | Model to use | `llama3-70b-8192` |
+| `GROQ_MODEL` | Model to use | `llama-3.3-70b-versatile` |
 | `POSTGRES_USER` | DB username | `flashcard_user` |
 | `POSTGRES_PASSWORD` | DB password | required |
 | `POSTGRES_DB` | Database name | `flashcard_db` |
