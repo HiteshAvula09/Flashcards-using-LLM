@@ -86,7 +86,7 @@ async def ingest_pdf(
 
     doc = Document(
         id          = result["document_id"],
-        user_id     = user_id if user_id != "anonymous" else None,
+        user_id     = None,
         filename    = file.filename,
         page_count  = result["page_count"],
         chunk_count = result["chunk_count"],
