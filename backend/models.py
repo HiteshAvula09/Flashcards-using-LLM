@@ -25,7 +25,7 @@ from pydantic import BaseModel, Field
 from backend.database import Base
 
 
-#ORM Models
+# ── ORM Models ────────────────────────────────────────────────────────────────
 
 class User(Base):
     __tablename__ = "users"
@@ -102,12 +102,12 @@ class CardReview(Base):
     flashcard: Mapped["Flashcard"]       = relationship(back_populates="reviews")
 
 
-#Pydantic Schemas
+# ── Pydantic Schemas ──────────────────────────────────────────────────────────
 
 class FlashcardSchema(BaseModel):
     question:    str
     answer:      str
-    difficulty:  str = "medium"
+    difficulty:  str           = "medium"
     topic:       Optional[str] = None
     source_page: Optional[int] = None
 
@@ -119,6 +119,8 @@ class MCQOption(BaseModel):
     text:       str
     is_correct: bool
 
+    model_config = {"from_attributes": True}
+
 
 class QuizQuestion(BaseModel):
     question:    str
@@ -128,13 +130,16 @@ class QuizQuestion(BaseModel):
     explanation: Optional[str] = None
     source_page: Optional[int] = None
 
+    # Required so FastAPI can serialise generator output into this schema
+    model_config = {"from_attributes": True}
+
 
 class GenerateRequest(BaseModel):
-    topic:       str  = Field(..., description="Topic to generate from")
-    document_id: str  = Field(..., description="UUID of the ingested document")
-    num_cards:   int  = Field(default=10, ge=1, le=30)
-    num_quiz:    int  = Field(default=5,  ge=1, le=20)
-    quiz_type:   str  = Field(default="mcq")
+    topic:       str = Field(..., description="Topic to generate from")
+    document_id: str = Field(..., description="UUID of the ingested document")
+    num_cards:   int = Field(default=10, ge=1, le=30)
+    num_quiz:    int = Field(default=5,  ge=1, le=20)
+    quiz_type:   str = Field(default="mcq")
 
 
 class GenerateResponse(BaseModel):
@@ -142,8 +147,11 @@ class GenerateResponse(BaseModel):
     quiz:        list[QuizQuestion]
     document_id: str
 
+    model_config = {"from_attributes": True}
+
 
 class ReviewRating(BaseModel):
     flashcard_id: str
-    user_id:      str
+    # user_id is optional — no auth yet, reviews are stored with user_id=None
+    user_id:      Optional[str] = None
     rating:       int = Field(..., ge=0, le=5)
