@@ -21,7 +21,7 @@ settings = get_settings()
 client   = Groq(api_key=settings.groq_api_key)
 
 
-# ── Prompt templates (subject-agnostic) ───────────────────────────────────────
+#Prompt templates (subject-agnostic)
 
 FLASHCARD_PROMPT = """\
 You are an expert tutor. Based ONLY on the context below, generate exactly {num_cards} flashcards.
@@ -124,7 +124,7 @@ QUIZ_PROMPTS = {
 }
 
 
-# ── Groq call with retry ──────────────────────────────────────────────────────
+#Groq call with retry
 
 @retry(
     stop=stop_after_attempt(3),
@@ -155,7 +155,7 @@ def _parse_json_safe(raw: str, label: str) -> list:
         return []
 
 
-# ── Context builder — scoped to document_id ──────────────────────────────────
+#Context builder — scoped to document_id
 
 def _build_context(topic: str, document_id: str, n_chunks: int = 6) -> str:
     """
@@ -167,7 +167,7 @@ def _build_context(topic: str, document_id: str, n_chunks: int = 6) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
+#Public API
 
 def generate_flashcards(
     topic:       str,
