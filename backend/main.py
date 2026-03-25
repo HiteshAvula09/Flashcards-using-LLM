@@ -19,6 +19,7 @@ Endpoints:
 
 import shutil
 import tempfile
+from datetime import date
 from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
@@ -36,6 +37,8 @@ from backend.generator import generate_flashcards, generate_quiz
 from backend.scheduler import update_card, get_due_cards, CardState
 
 settings = get_settings()
+
+DEMO_USER_ID = "demo_user"
 
 app = FastAPI(
     title="Flashcard AI",
@@ -56,14 +59,14 @@ def startup():
     create_tables()
 
 
-#Health
+# ── Health ────────────────────────────────────────────────────────────────────
 
 @app.get("/health")
 def health():
     return {"status": "ok", "env": settings.app_env}
 
 
-#Ingest
+# ── Ingest ────────────────────────────────────────────────────────────────────
 
 @app.post("/ingest")
 async def ingest_pdf(
@@ -104,7 +107,7 @@ async def ingest_pdf(
     }
 
 
-#Documents
+# ── Documents ─────────────────────────────────────────────────────────────────
 
 @app.get("/documents")
 def get_documents(db: Session = Depends(get_db)):
@@ -125,11 +128,15 @@ def get_documents(db: Session = Depends(get_db)):
     }
 
 
-#Generate
+# ── Generate ──────────────────────────────────────────────────────────────────
 
 @app.post("/generate", response_model=GenerateResponse)
 def generate(req: GenerateRequest, db: Session = Depends(get_db)):
-    """Generate flashcards and a quiz for a given topic + document."""
+    """Generate flashcards and a quiz for a given topic + document.
+
+    Each flashcard gets a CardReview row seeded with next_review = today
+    so it appears immediately in Review Cards without any extra steps.
+    """
     doc = db.get(Document, req.document_id)
     if not doc:
         raise HTTPException(404, f"Document '{req.document_id}' not found.")
@@ -147,6 +154,20 @@ def generate(req: GenerateRequest, db: Session = Depends(get_db)):
             source_page = card.source_page,
         )
         db.add(fc)
+        db.flush()  # populate fc.id before creating the review row
+
+        # Seed an initial SM-2 review record so the card is due today.
+        # user_id=None avoids FK violation — no auth yet.
+        review = CardReview(
+            user_id       = None,
+            flashcard_id  = fc.id,
+            ease_factor   = 2.5,
+            interval_days = 1,
+            repetitions   = 0,
+            next_review   = date.today(),
+            last_rating   = None,
+        )
+        db.add(review)
 
     db.commit()
 
@@ -157,14 +178,15 @@ def generate(req: GenerateRequest, db: Session = Depends(get_db)):
     )
 
 
-#Review
+# ── Review ────────────────────────────────────────────────────────────────────
 
 @app.get("/review/{user_id}")
 def get_review_cards(user_id: str, db: Session = Depends(get_db)):
     """Returns all flashcards due for review today for a user."""
+    # user_id is stored as None until auth is added — query accordingly
     reviews = (
         db.query(CardReview)
-        .filter(CardReview.user_id == user_id)
+        .filter(CardReview.user_id == None)
         .all()
     )
 
@@ -247,7 +269,7 @@ def submit_review(rating: ReviewRating, db: Session = Depends(get_db)):
     }
 
 
-#Quiz
+# ── Quiz ──────────────────────────────────────────────────────────────────────
 
 @app.post("/quiz/submit")
 def submit_quiz(
@@ -274,7 +296,7 @@ def submit_quiz(
     return {"session_id": session.id, "score": score}
 
 
-#Cards list
+# ── Cards list ────────────────────────────────────────────────────────────────
 
 @app.get("/cards/{document_id}")
 def list_cards(document_id: str, db: Session = Depends(get_db)):
