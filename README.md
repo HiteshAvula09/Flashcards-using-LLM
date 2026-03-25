@@ -7,14 +7,14 @@ Upload any PDF textbook, lecture notes, research paper and get instant flashcard
 
 ## Features
 
-- **Upload any PDF** — no subject restrictions, works with any content
-- **RAG pipeline** — chunks and embeds your PDF into ChromaDB, retrieves relevant context before every generation
-- **Groq LLM** — fast, free `llama-3.3-70b-versatile` for flashcard and quiz generation
-- **Multi-format quizzes** — MCQ, true/false, and short answer
-- **SM-2 spaced repetition** — cards scheduled based on your recall ratings
-- **SQuAD v2 evaluation** — Exact Match and F1 scoring to benchmark generation quality
-- **FastAPI backend** — clean REST API, auto-documented at `/docs`
-- **Streamlit frontend** — upload, generate, review, and quiz in one interface
+- **Upload any PDF** : no subject restrictions, works with any content
+- **RAG pipeline** : chunks and embeds your PDF into ChromaDB, retrieves relevant context before every generation
+- **Groq LLM** : fast, free `llama-3.3-70b-versatile` for flashcard and quiz generation
+- **Multi-format quizzes** : MCQ, true/false, and short answer
+- **SM-2 spaced repetition** : cards scheduled based on your recall ratings
+- **SQuAD v2 evaluation** : Exact Match and F1 scoring to benchmark generation quality
+- **FastAPI backend** : clean REST API, auto-documented at `/docs`
+- **Streamlit frontend** : upload, generate, review, and quiz in one interface
 
 ---
 
@@ -270,6 +270,22 @@ llm = Ollama(model="llama3.2:3b")
 All prompts, Pydantic validation, and FastAPI routes stay identical.
 
 ---
+## Screenshots
+
+### Upload PDF
+![Upload PDF](assets/Upload_PDF.png)
+
+### Generate flashcards
+![Generate](assets/Generate_Flashcards.png)
+
+### Take quiz
+![Quiz](assets/Quiz.png)
+
+### MyLibrary
+![MyLibrary](assets/MyLibrary.png)
+
+### Review cards
+![Review](assets/Review.png)
 
 ## Challenges
 1. ChromaDB batch size limit
