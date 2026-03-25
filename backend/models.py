@@ -25,7 +25,7 @@ from pydantic import BaseModel, Field
 from backend.database import Base
 
 
-# ── ORM Models ────────────────────────────────────────────────────────────────
+#ORM Models
 
 class User(Base):
     __tablename__ = "users"
@@ -102,7 +102,7 @@ class CardReview(Base):
     flashcard: Mapped["Flashcard"]       = relationship(back_populates="reviews")
 
 
-# ── Pydantic Schemas ──────────────────────────────────────────────────────────
+#Pydantic Schemas
 
 class FlashcardSchema(BaseModel):
     question:    str
