@@ -271,6 +271,24 @@ All prompts, Pydantic validation, and FastAPI routes stay identical.
 
 ---
 
+## Challenges
+1. ChromaDB batch size limit
+ChromaDB enforced a maximum batch size of 166 on the installed version, causing ValueError during ingestion when the default batch of 500 was used. Fixed by reducing the upsert batch size to 100.
+2. Groq model deprecation
+The originally planned model llama3-70b-8192 was decommissioned by Groq mid-development. Migrated to llama-3.3-70b-versatile which required updating the model reference across config, README, and environment defaults.
+3. PostgreSQL port conflict on Windows
+Docker could not bind to the default PostgreSQL port 5432 because a native PostgreSQL installation was already listening on that port. Resolved by mapping the Docker container to port 5433 and updating all connection strings accordingly.
+4. Docker volume credential mismatch
+After changing the PostgreSQL password in .env, the Docker container kept rejecting connections because the old password was cached in the persistent volume. Required running docker compose down -v to wipe the volume and reinitialize with the correct credentials.
+5. Special characters in .env passwords
+Passwords containing # were silently truncated by the .env parser everything after # was treated as a comment. Resolved by using alphanumeric-only passwords in the .env file and documenting this as a known limitation for users.
+6. Foreign key constraint on document upload
+The documents table had a foreign key constraint on user_id referencing the users table. Since the app has no authentication yet, uploading with demo_user failed because that user didn't exist in the database. Fixed by making user_id nullable in the Document model to support anonymous uploads.
+7. LLM JSON output reliability
+Smaller or less capable models occasionally return malformed JSON with extra markdown fences or preamble text. Handled by implementing a _parse_json_safe() function that strips markdown fences before parsing, with per-item validation through Pydantic so one bad card doesn't drop the entire generation.
+8. Per-document ChromaDB isolation
+Initial design used a single hardcoded ChromaDB collection named "openstax", which meant all uploaded PDFs shared the same vector space and contaminated each other's retrieval results. Redesigned so each document gets its own collection named by its document_id, completely isolating retrieval per upload.
+
 ## License
 
 MIT
