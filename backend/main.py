@@ -56,14 +56,14 @@ def startup():
     create_tables()
 
 
-# ── Health ────────────────────────────────────────────────────────────────────
+#Health
 
 @app.get("/health")
 def health():
     return {"status": "ok", "env": settings.app_env}
 
 
-# ── Ingest ────────────────────────────────────────────────────────────────────
+#Ingest
 
 @app.post("/ingest")
 async def ingest_pdf(
@@ -104,7 +104,7 @@ async def ingest_pdf(
     }
 
 
-# ── Documents ─────────────────────────────────────────────────────────────────
+#Documents
 
 @app.get("/documents")
 def get_documents(db: Session = Depends(get_db)):
@@ -125,7 +125,7 @@ def get_documents(db: Session = Depends(get_db)):
     }
 
 
-# ── Generate ──────────────────────────────────────────────────────────────────
+#Generate
 
 @app.post("/generate", response_model=GenerateResponse)
 def generate(req: GenerateRequest, db: Session = Depends(get_db)):
@@ -157,7 +157,7 @@ def generate(req: GenerateRequest, db: Session = Depends(get_db)):
     )
 
 
-# ── Review ────────────────────────────────────────────────────────────────────
+#Review
 
 @app.get("/review/{user_id}")
 def get_review_cards(user_id: str, db: Session = Depends(get_db)):
@@ -247,7 +247,7 @@ def submit_review(rating: ReviewRating, db: Session = Depends(get_db)):
     }
 
 
-# ── Quiz ──────────────────────────────────────────────────────────────────────
+#Quiz
 
 @app.post("/quiz/submit")
 def submit_quiz(
@@ -274,7 +274,7 @@ def submit_quiz(
     return {"session_id": session.id, "score": score}
 
 
-# ── Cards list ────────────────────────────────────────────────────────────────
+#Cards list
 
 @app.get("/cards/{document_id}")
 def list_cards(document_id: str, db: Session = Depends(get_db)):
