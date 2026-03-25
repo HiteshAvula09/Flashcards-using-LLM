@@ -1,7 +1,7 @@
 # Flashcard AI
 
 AI-powered flashcard and quiz generator for students.
-Upload any PDF — textbook, lecture notes, research paper — and get instant flashcards, multi-format quizzes, and a spaced repetition review system powered by Groq's free LLM API.
+Upload any PDF textbook, lecture notes, research paper and get instant flashcards, multi-format quizzes, and a spaced repetition review system powered by Groq's free LLM API.
 
 ---
 
@@ -24,7 +24,7 @@ Upload any PDF — textbook, lecture notes, research paper — and get instant f
 |---|---|
 | LLM | Groq API (`llama-3.3-70b-versatile`) — free tier |
 | Embeddings | `sentence-transformers/all-MiniLM-L6-v2` — local |
-| Vector store | ChromaDB — local, per-document collections |
+| Vector store | ChromaDB, per-document collections |
 | Database | PostgreSQL (Docker) |
 | Backend | FastAPI + SQLAlchemy |
 | Frontend | Streamlit |
