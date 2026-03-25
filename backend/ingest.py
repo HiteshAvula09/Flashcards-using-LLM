@@ -27,7 +27,7 @@ from backend.config import get_settings
 settings = get_settings()
 
 
-# ── Step 1: Extract raw text per page ────────────────────────────────────────
+#Step 1: Extract raw text per page
 
 def extract_pages(pdf_path: str) -> list[dict]:
     """
@@ -60,7 +60,7 @@ def _clean_text(text: str) -> str:
     return text.strip()
 
 
-# ── Step 2: Chunk with LangChain ──────────────────────────────────────────────
+#Step 2: Chunk with LangChain
 
 def chunk_pages(pages: list[dict]) -> list[dict]:
     splitter = RecursiveCharacterTextSplitter(
@@ -85,7 +85,7 @@ def chunk_pages(pages: list[dict]) -> list[dict]:
     return chunks
 
 
-# ── Step 3: Embed ─────────────────────────────────────────────────────────────
+#Step 3: Embed
 
 def embed_chunks(chunks: list[dict]):
     model  = SentenceTransformer(settings.embed_model)
@@ -108,7 +108,7 @@ def embed_chunks(chunks: list[dict]):
     return ids, embeddings, metadatas
 
 
-# ── Step 4: Store in ChromaDB (per-document collection) ───────────────────────
+#Step 4: Store in ChromaDB (per-document collection)
 
 def store_in_chroma(
     document_id: str,
@@ -148,7 +148,7 @@ def store_in_chroma(
     return count
 
 
-# ── Retrieval helper (called by generator.py) ─────────────────────────────────
+#Retrieval helper (called by generator.py)
 
 def query_chroma(
     query_text:  str,
@@ -198,7 +198,7 @@ def list_documents() -> list[str]:
     return [col.name for col in client.list_collections()]
 
 
-# ── Full pipeline ─────────────────────────────────────────────────────────────
+#Full pipeline
 
 def ingest(pdf_path: str, document_id: str = None) -> dict:
     """
