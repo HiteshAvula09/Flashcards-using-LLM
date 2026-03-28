@@ -305,6 +305,21 @@ Smaller or less capable models occasionally return malformed JSON with extra mar
 8. Per-document ChromaDB isolation
 Initial design used a single hardcoded ChromaDB collection named "openstax", which meant all uploaded PDFs shared the same vector space and contaminated each other's retrieval results. Redesigned so each document gets its own collection named by its document_id, completely isolating retrieval per upload.
 
+## Metrics
+
+| Metric | Value |
+|---|---|
+| Document ingestion | 401 pages → 1,377 chunks in ~28 seconds |
+| Flashcard generation speed | 10 cards in 3.69 seconds via Groq |
+| JSON output reliability | 100% (25/25 across 5 topics) |
+| SQuAD v2 Exact Match | 0.36 (100 samples) |
+| SQuAD v2 F1 Score | 0.584 (100 samples) |
+| Embedding model | all-MiniLM-L6-v2 · 384-dim · fully local |
+| SM-2 unit tests | 9/9 passing |
+| LLM | llama-3.3-70b-versatile via Groq free tier |
+
+NOTE: Evaluated generation quality using SQuAD v2 benchmark across 100 samples, achieving an F1 score of 0.584 and Exact Match of 0.36 with llama-3.3-70b-versatile and comparable to early BERT-era baselines without any fine-tuning.
+
 ## License
 
 MIT
